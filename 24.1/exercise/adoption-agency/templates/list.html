@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block main %}
+<table class="table table-striped">
+	<thead>
+		<th>id</th>
+		<th>name</th>
+	</thead>
+	<tbody>
+		<tr>
+			<td>
+				<a href="/edit" class="btn btn-info">Edit</a>
+			</td>
+			<td>1</td>
+			<td>One</td>
+		</tr>
+		<tr>
+			<td>
+				<a href="/edit" class="btn btn-info">Edit</a>
+			</td>
+			<td>2</td>
+			<td>Two</td>
+		</tr>
+	</tbody>
+</table>
+<a href="/add"
+	 class="btn-lg btn-block text-center btn-success text-decoration-none"
+   role="button">Add Pet</a>
+{% endblock %}

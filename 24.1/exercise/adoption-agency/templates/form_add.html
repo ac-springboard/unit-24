@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block main %}
+	<h1>Add Pet</h1>
+	<form method="POST" action="/add" novalidate>
+		{% for field in form %}
+			<div class="form-group">
+				{{ field.label }}
+				{{ field(class='form-control') }}
+				<small class='form-text text-danger text-sm'>
+					{% for error in field.errors %}
+						{{ error }}
+					{% endfor %}
+				</small>
+			</div>
+		{% endfor %}
+		<a href="/"
+			 role="button"
+			 class="btn-lg btn-block text-center btn-danger text-decoration-none"
+		>Cancel
+		</a>
+		<button type="submit"
+						class="btn-lg btn-block text-center btn-success">Submit
+		</button>
+	</form>
+{% endblock %}
