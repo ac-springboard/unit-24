@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
-from wtforms import StringField, BooleanField, IntegerField
+from wtforms import StringField, BooleanField, IntegerField, HiddenField
 from wtforms.validators import InputRequired, NumberRange, Optional
 
 app = Flask(__name__)
@@ -20,27 +20,31 @@ db = SQLAlchemy(app)
 ######################################################################
 
 @app.route('/')
-@app.route('/list')
+@app.route('/pets/list')
 def list_view():
-    return render_template('list.html')
+    pets = get_all_pets()
+    return render_template('list.html', pets=pets, page_title="Pet List")
 
 
-@app.route('/add', methods=['GET', 'POST'])
+@app.route('/pets/add', methods=['GET', 'POST'])
 def add_view():
-    form = PetForm()
-    if form.validate_on_submit():
-        return redirect('/list')
-    else:
-        return render_template('form_add.html', form=form)
+    form = AddPet()
+    if not form.validate_on_submit():
+        return render_template('form_add.html', form=form, page_title='Add Pet')
+    pet = Pet(form.data)
+    add_pet(pet)
+    return redirect('/pets/list')
 
 
-@app.route('/edit', methods=['GET', 'POST'])
-def edit_view():
-    form = PetForm()
-    if form.validate_on_submit():
-        return redirect('/list')
-    else:
-        return render_template('form_edit.html', form=form)
+@app.route('/pets/<int:pet_id>/edit', methods=['GET', 'POST'])
+def edit_view(pet_id):
+    pet = get_pet_by_id(pet_id)
+    form = EditPet(obj=pet)
+    if not form.validate_on_submit():
+        return render_template('form_edit.html', form=form, page_title='Edit Pet')
+    pet.update_columns(form.data)
+    edit_pet(pet)
+    return redirect('/pets/list')
 
 
 ######################################################################
@@ -48,7 +52,8 @@ def edit_view():
 #                              FORMS                                 #
 #                                                                    #
 ######################################################################
-class PetForm(FlaskForm):
+class EditPet(FlaskForm):
+    id = HiddenField()
     name = StringField('Pet Name*',
                        validators=[InputRequired(message='Pet Name is required')])
     species = StringField('Species*',
@@ -57,7 +62,19 @@ class PetForm(FlaskForm):
     age = IntegerField('Age',
                        validators=[Optional(), NumberRange(0, 150, message='Age must be between 0 and 150 or empty.')])
     notes = StringField('Notes')
-    available = BooleanField('Available', default='yes')
+    available = BooleanField('Available', default=True)
+
+
+class AddPet(FlaskForm):
+    name = StringField('Pet Name*',
+                       validators=[InputRequired(message='Pet Name is required')])
+    species = StringField('Species*',
+                          validators=[InputRequired(message='Species is required')])
+    photo_url = StringField('Photo URL')
+    age = IntegerField('Age',
+                       validators=[Optional(), NumberRange(0, 150, message='Age must be between 0 and 150 or empty.')])
+    notes = StringField('Notes')
+    available = BooleanField('Available', default=True)
 
 
 ######################################################################
@@ -102,12 +119,37 @@ class Pet(db.Model):
         Updates the data of this post from a dictionary.
         """
         self.id = dct.get('id', None)
-        self.name = dct.get('title') or None
-        self.species = dct.get('content') or None
-        self.photo_url = dct.get('user_id') or None
-        self.age = dct.get('user_id') or None
-        self.notes = dct.get('user_id') or None
-        self.available = dct.get('user_id') or True
+        self.name = dct.get('name') or None
+        self.species = dct.get('species') or None
+        self.photo_url = dct.get('photo_url') or None
+        self.age = dct.get('age') or None
+        self.notes = dct.get('notes') or None
+        self.available = dct.get('available') or True
+
+
+######################################################################
+#                                                                    #
+#                           REPOSITORY                               #
+#                                                                    #
+######################################################################
+def get_all_pets():
+    return Pet.query.all()
+
+
+def add_pet(pet):
+    db.session.add(pet)
+    db.session.commit()
+    db.session.refresh(pet)
+    return pet.id
+
+
+def edit_pet(pet):
+    db.session.commit()
+    return pet.id
+
+
+def get_pet_by_id(pet_id):
+    return Pet.query.get_or_404(pet_id)
 
 
 ######################################################################
@@ -117,4 +159,33 @@ class Pet(db.Model):
 ######################################################################
 db.drop_all()
 db.create_all()
+
+barbecue = Pet({
+    'name': 'Barbecue',
+    'species': 'Cat',
+    'photo_url': '',
+    'age': '17',
+    'notes': 'Needs more spicy',
+    'available': True
+})
+
+cooked = Pet({
+    'name': 'Cooked',
+    'species': 'Chicken',
+    'photo_url': '',
+    'age': '0',
+    'notes': 'Soooo tender...',
+    'available': True
+})
+
+frozen = Pet({
+    'name': 'Frozen',
+    'species': 'Duck',
+    'photo_url': '',
+    'age': '45',
+    'notes': 'Expired',
+    'available': True
+})
+
+db.session.add_all([barbecue, cooked, frozen])
 db.session.commit()

@@ -1,18 +1,20 @@
 {% extends "base.html" %}
 
 {% block main %}
-	<h1>Add Pet</h1>
-	<form method="POST" action="/add" novalidate>
+	<h3>{{ page_title }}</h3>
+	<form method="POST" novalidate>
 		{% for field in form %}
-			<div class="form-group">
-				{{ field.label }}
-				{{ field(class='form-control') }}
-				<small class='form-text text-danger text-sm'>
-					{% for error in field.errors %}
-						{{ error }}
-					{% endfor %}
-				</small>
-			</div>
+			{% if field.type != 'HiddenField' %}
+				<div class="form-group">
+					{{ field.label }}
+					{{ field(class='form-control') }}
+					<small class='form-text text-danger text-sm'>
+						{% for error in field.errors %}
+							{{ error }}
+						{% endfor %}
+					</small>
+				</div>
+			{% endif %}
 		{% endfor %}
 		<a href="/"
 			 role="button"
