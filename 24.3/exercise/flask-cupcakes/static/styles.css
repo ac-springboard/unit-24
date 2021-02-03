@@ -1,0 +1,42 @@
+html * {
+  font-family: "Amatic SC", cursive;
+  font-size: 1.2em;
+}
+
+h1 {
+  font-size: 3em;
+}
+
+h2 {
+  font-size: 2em;
+}
+
+h1, h2, h3 {
+  color: #fc5a8d;
+}
+
+.btn {
+  font-size: 1.2em;
+}
+
+.container, thead {
+  background-color: pink;
+}
+
+table, tr, td {
+  border: 1px solid pink !important;
+}
+
+.cupcake-img {
+  max-width: 150px;
+  max-height: 150px;
+  box-shadow: 3px 3px 3px #fc5a8d !important;
+  border: 8px solid pink;
+}
+
+.delete-button-icon {
+  width: 2em;
+  heigh: 2em;
+}
+
+/*# sourceMappingURL=styles.css.map */

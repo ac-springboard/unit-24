@@ -1,0 +1,47 @@
+$action-icon-size: 2em;
+$decoration-color: pink;
+$title-color: #fc5a8d;
+$shadow-color: #fc5a8d;
+
+html * {
+  font-family: 'Amatic SC', cursive;
+  font-size: 1.2em;
+}
+
+h1 {
+  font-size: 3em;
+}
+
+h2 {
+  font-size: 2em;
+}
+
+h1, h2, h3 {
+  color: $title-color;
+}
+
+
+.btn {
+  font-size: 1.2em;
+}
+
+.container, thead {
+  background-color: $decoration-color;
+}
+
+table, tr, td {
+  border: 1px solid $decoration-color !important;
+}
+
+
+.cupcake-img {
+  max-width: 150px;
+  max-height: 150px;
+  box-shadow: 3px 3px 3px $shadow-color !important;
+  border: 8px solid $decoration-color;
+}
+
+.delete-button-icon {
+  width: $action-icon-size;
+  heigh: $action-icon-size;
+}
