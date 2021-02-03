@@ -27,6 +27,10 @@ table, tr, td {
   border: 1px solid pink !important;
 }
 
+.delete-button {
+  cursor: pointer;
+}
+
 .cupcake-img {
   max-width: 150px;
   max-height: 150px;

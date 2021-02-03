@@ -33,6 +33,9 @@ table, tr, td {
   border: 1px solid $decoration-color !important;
 }
 
+.delete-button{
+  cursor: pointer;
+}
 
 .cupcake-img {
   max-width: 150px;
