@@ -1,6 +1,14 @@
+.nav {
+  border: 1px solid magenta;
+}
+
 .navbar-nav, .nav-link, .nav-item {
   color: white !important;
   display: inline-block;
+}
+
+.navbar-expand-lg {
+  justify-content: space-between !important;
 }
 
 .nav-item {
@@ -16,6 +24,26 @@
   color: #343a40 !important;
   background: #5bc0de !important;
   font-weight: bold !important;
+}
+
+.card {
+  display: inline-block;
+  min-width: 16em !important;
+  max-width: 30% !important;
+}
+
+.container, .container-fluid {
+  min-width: 85% !important;
+}
+
+.item {
+  margin: 1em;
+  flex-grow: 1;
+  max-width: 30%;
+}
+
+.row {
+  justify-content: space-around;
 }
 
 /*# sourceMappingURL=style.css.map */

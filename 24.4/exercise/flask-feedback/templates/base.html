@@ -18,8 +18,8 @@
 			<a class="navbar-brand" href="/">Flask Feedback</a>
 			<div class="navbar-nav">
 				{% if 'username' in session %}
-					<a class="nav-link nav-item text-right text-decoration-none"
-						 href="/feedback">Feedbacks</a></li>
+					<a class="nav-link nav-item text-decoration-none"
+						 href="/feedback">Feedbacks</a>
 					<a class="nav-link nav-item text-right" href="/logout">Logout</a>
 					<a class="nav-link nav-item text-right text-decoration-none"
 						 href="/users/{{ session['username'] }}">{{ session['username'] }}</a>
@@ -30,7 +30,7 @@
 			</div>
 		</nav>
 
-		<div class="container mt-5">
+		<div class="mt-5">
 			{% for msg in get_flashed_messages() %}
 				<div class="alert alert-info">{{ msg }}</div>
 			{% endfor %}
