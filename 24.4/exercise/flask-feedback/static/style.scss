@@ -1,0 +1,25 @@
+$bootstrap-primary: #0275d8;
+$bootstrap-info: #5bc0de;
+$bootstrap-dark: #343a40;
+
+.navbar-nav, .nav-link, .nav-item {
+  color: white !important;
+  display: inline-block;
+}
+
+.nav-item {
+  padding-left: 0.5em !important;
+  padding-right: 0.5em !important;
+
+}
+
+.nav-link:active, nav-link:visited {
+  color: white;
+}
+
+.nav-link:hover, nav-item:active {
+  color: $bootstrap-dark !important;
+  background: $bootstrap-info !important;
+  font-weight: bold !important ;
+}
+

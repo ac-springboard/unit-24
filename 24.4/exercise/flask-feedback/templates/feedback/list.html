@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}All Feedbacks{% endblock %}
+
+{% block content %}
+
+	{% for fb in feedbacks %}
+		<div class="card m-4">
+			<a href="/users/{{ fb.user.username }}">
+				<h5 class="card-header bg-info text-white font-italic">
+					by {{ fb.user.first_name }} {{ fb.user.last_name }}
+				</h5>
+			</a>
+			<div class="card-body">
+				<h5 class="card-title">{{ fb.title }}</h5>
+				<p class="card-text">{{ fb.content }}</p>
+				{#<a href="#" class="btn btn-primary">Go somewhere</a>#}
+			</div>
+		</div>
+	{% endfor %}
+
+{% endblock %}
