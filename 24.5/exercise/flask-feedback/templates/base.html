@@ -31,8 +31,8 @@
 		</nav>
 
 		<div class="mt-5">
-			{% for msg in get_flashed_messages() %}
-				<div class="alert alert-info">{{ msg }}</div>
+			{% for cat, msg in get_flashed_messages(with_categories=True) %}
+				<div class="alert {{ cat }}">{{ msg }}</div>
 			{% endfor %}
 
 			{% block content %}

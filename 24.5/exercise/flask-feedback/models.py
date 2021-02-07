@@ -3,6 +3,8 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 
+from decorators import AuthorizationServer as AS
+
 bcrypt = Bcrypt()
 db = SQLAlchemy()
 
@@ -17,10 +19,23 @@ def connect_db(app):
     db.init_app(app)
 
 
-def create_tables():
+def reset_tables():
     db.drop_all()
     db.create_all()
     db.session.commit()
+
+    john = User(first_name="John", last_name="Doe",
+                email='almircampos@gmail.com', password='',
+                admin=False)
+    jane = User(first_name="Jane", last_name="D",
+                email='almircampos@gmail.com', password='',
+                admin=True)
+
+    db.session.add_all([john, jane])
+    db.session.commit()
+
+    AS.add_or_update_user_autho(john, ['edit_feedback', 'delete_feedback'])
+    AS.add_or_update_user_autho(jane, [])
 
 
 class User(db.Model):
@@ -38,6 +53,7 @@ class User(db.Model):
     email = db.Column(db.String(50), nullable=False)
     first_name = db.Column(db.String(30), nullable=False)
     last_name = db.Column(db.String(30), nullable=False)
+    admin = db.Column(db.Boolean)
 
     feedback = db.relationship("Feedback",
                                backref="user",

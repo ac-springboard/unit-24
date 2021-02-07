@@ -1,10 +1,13 @@
 """Feedback Flask app."""
+import sys
 
 from flask import Flask, render_template, redirect, session
-from flask_debugtoolbar import DebugToolbarExtension
+# from flask_debugtoolbar import DebugToolbarExtension
 from werkzeug.exceptions import Unauthorized
+# import click
 
-from models import connect_db, db, User, Feedback, create_tables
+from decorators import authenticated
+from models import connect_db, db, User, Feedback, reset_tables
 from forms import RegisterForm, LoginForm, FeedbackForm, DeleteForm
 
 app = Flask(__name__)
@@ -13,14 +16,26 @@ app.config['SQLALCHEMY_DATABASE_URI'] = "postgres:///flask-feedback"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['SECRET_KEY'] = "shhhhh"
-# app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
-# toolbar = DebugToolbarExtension(app)
+
+# app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 connect_db(app)
 
+print('arguments:', sys.argv)
 
-# create_tables()
+# CUSTOM CONFIGS
+
+# @click.command()
+# @click.option('-s', '--tables_reset', default=False, help='If True all the tables will be recreated with testing data.')
+# def main(tables_reset):
+#     print('--tables_reset:', tables_reset)
+#     if tables_reset:
+#         reset_tables()
+#     app.run()
+
+
+# ROUTES
 
 
 @app.route("/")
@@ -82,6 +97,7 @@ def login():
 
 
 @app.route("/logout")
+@authenticated
 def logout():
     """Logout route."""
 
@@ -90,6 +106,7 @@ def logout():
 
 
 @app.route("/users/<username>")
+@authenticated
 def show_user(username):
     """Example page for logged-in-users."""
 
@@ -118,11 +135,12 @@ def remove_user(username):
 
 
 @app.route("/users/<username>/feedback/new", methods=["GET", "POST"])
+@authenticated
 def new_feedback(username):
     """Show add-feedback form and process it."""
 
-    if "username" not in session or username != session['username']:
-        raise Unauthorized()
+    # if "username" not in session or username != session['username']:
+    #     raise Unauthorized()
 
     form = FeedbackForm()
 
@@ -146,13 +164,14 @@ def new_feedback(username):
 
 
 @app.route("/feedback/<int:feedback_id>/update", methods=["GET", "POST"])
+@authenticated
 def update_feedback(feedback_id):
     """Show update-feedback form and process it."""
 
     feedback = Feedback.query.get(feedback_id)
 
-    if "username" not in session or feedback.username != session['username']:
-        raise Unauthorized()
+    # if "username" not in session or feedback.username != session['username']:
+    #     raise Unauthorized()
 
     form = FeedbackForm(obj=feedback)
 
@@ -168,12 +187,13 @@ def update_feedback(feedback_id):
 
 
 @app.route("/feedback/<int:feedback_id>/delete", methods=["POST"])
+@authenticated
 def delete_feedback(feedback_id):
     """Delete feedback."""
 
     feedback = Feedback.query.get(feedback_id)
-    if "username" not in session or feedback.username != session['username']:
-        raise Unauthorized()
+    # if "username" not in session or feedback.username != session['username']:
+    #     raise Unauthorized()
 
     form = DeleteForm()
 
@@ -185,6 +205,7 @@ def delete_feedback(feedback_id):
 
 
 @app.route("/feedback")
+@authenticated
 def list_feedbacks():
     logged_username = session['username']
     logged_user = User.query.filter_by(username=logged_username).first()
@@ -192,3 +213,11 @@ def list_feedbacks():
     return render_template('/feedback/list.html',
                            logged_user=logged_user,
                            feedbacks=feedbacks)
+
+
+@app.route("/contact-us")
+def contact_us():
+    return render_template('admin/contact_us.html')
+
+
+# tst = True

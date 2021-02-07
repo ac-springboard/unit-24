@@ -1,6 +1,8 @@
 $bootstrap-primary: #0275d8;
 $bootstrap-info: #5bc0de;
 $bootstrap-dark: #343a40;
+$bootstrap-warning: #ffc107;
+$bootstrap-danger: #dc3545;
 
 .nav {
   border: 1px solid magenta;
@@ -48,35 +50,16 @@ $bootstrap-dark: #343a40;
 
 .container, .container-fluid {
   min-width: 85% !important;
-  //border: 1px solid orange !important;
-  //display: flex !important;
-  //flex-direction: row !important;
-  //flex-wrap: wrap !important;
-  //justify-content: space-between !important;
-  //align-items: stretch !important;
-  //align-content: space-between !important;
 }
 
 .item {
-  //flex-basis: auto;
-  //justify-content: space-between;
   margin: 1em;
   flex-grow: 1;
   max-width: 30%;
 }
 
 .row {
-  //min-width: 100% !important;
   justify-content: space-around;
-  //border: 3px solid black;
 }
 
-.col-md-3 {
-  //min-width: 32% !important;
-  //max-width: 32% !important;
-}
 
-.col-lg-3 {
-  //min-width: 22% !important;
-  //max-width: 22% !important;
-}
