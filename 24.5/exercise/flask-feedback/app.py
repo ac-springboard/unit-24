@@ -1,14 +1,22 @@
 """Feedback Flask app."""
-import sys
+import os
 
 from flask import Flask, render_template, redirect, session
 # from flask_debugtoolbar import DebugToolbarExtension
 from werkzeug.exceptions import Unauthorized
-# import click
 
-from decorators import authenticated
-from models import connect_db, db, User, Feedback, reset_tables
+from decorators import authenticated, authorized
+from models import connect_db, db, User, Feedback
+from repository import reset_tables
 from forms import RegisterForm, LoginForm, FeedbackForm, DeleteForm
+
+# CONFIG ENVIRONMENT
+
+# os.environ["FLASK_RUN_FROM_CLI"] = "true"
+os.environ['FLASK_ENV'] = 'development'
+os.environ['FLASK_APP'] = 'app.py'
+
+# CREATE AND CONFIG THE APP
 
 app = Flask(__name__)
 
@@ -17,22 +25,11 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['SECRET_KEY'] = "shhhhh"
 
-
 # app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
+# DATABASE
+
 connect_db(app)
-
-print('arguments:', sys.argv)
-
-# CUSTOM CONFIGS
-
-# @click.command()
-# @click.option('-s', '--tables_reset', default=False, help='If True all the tables will be recreated with testing data.')
-# def main(tables_reset):
-#     print('--tables_reset:', tables_reset)
-#     if tables_reset:
-#         reset_tables()
-#     app.run()
 
 
 # ROUTES
@@ -188,6 +185,7 @@ def update_feedback(feedback_id):
 
 @app.route("/feedback/<int:feedback_id>/delete", methods=["POST"])
 @authenticated
+@authorized('delete_feedback')
 def delete_feedback(feedback_id):
     """Delete feedback."""
 
@@ -220,4 +218,16 @@ def contact_us():
     return render_template('admin/contact_us.html')
 
 
-# tst = True
+# @app.errorhandler(302)
+# def error_302():
+#     return render_template('302.html')
+
+
+# @app.errorhandler(404)
+# def error_404():
+#     return render_template('404.html'), 404
+
+
+if __name__ == '__main__':
+    reset_tables(db)
+    app.run()

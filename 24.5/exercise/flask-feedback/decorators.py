@@ -2,6 +2,9 @@ from flask import session, redirect, flash
 from flask_api.exceptions import NotAuthenticated
 from werkzeug.exceptions import Unauthorized
 
+from authorization_server import AuthorizationServer as AS
+from repository import FbRepo
+
 
 def authenticated(func):
     def check_authentication(*args, **kwargs):
@@ -29,51 +32,46 @@ def authenticated(func):
     return check_authentication
 
 
-def authorized(func):
-    def check_authorization(*args, **kwargs):
-        logged_username = session.get('username')
-        if not logged_username:
-            try:
-                raise Unauthorized()
-            except Unauthorized:
-                flash(u"Please contact the system administration"
-                      u"to get access to this resource.",
-                      'bg-warning')
-                return redirect('/contact-us')
+def get_ref_user(kwargs):
+    if 'feedback_id' in kwargs:
+        return FbRepo.get_by_id(kwargs['feedback_id'])
+    return None
 
-        if not args:
-            if not kwargs:
-                return func()
+
+def authorized(resource_key):
+    def authorized_decorator(func):
+        def check_authorization(*args, **kwargs):
+            logged_username = session.get('username')
+            user_autho = AS.autho_table[logged_username]
+            is_admin = user_autho['admin']
+            if not is_admin:
+                is_owner = get_ref_user(kwargs).username == logged_username
+                if not is_owner:
+                    is_authorized_resource = resource_key in user_autho['resources']
+                    if not is_authorized_resource:
+                        try:
+                            raise Unauthorized()
+                        except Unauthorized:
+                            flash(u"Please contact the system administration"
+                                  u" to get access to this resource.",
+                                  'bg-warning')
+                            return redirect('/contact-us')
+
+            if not args:
+                if not kwargs:
+                    return func()
+                else:
+                    return func(**kwargs)
             else:
-                return func(**kwargs)
-        else:
-            if not kwargs:
-                return func(*args)
-            else:
-                return func(*args, **kwargs)
+                if not kwargs:
+                    return func(*args)
+                else:
+                    return func(*args, **kwargs)
 
-    check_authorization.__name__ = func.__name__
-    return check_authorization
+        return check_authorization
+        authorized_decorator.__name__ = func.__name__
+
+    return authorized_decorator
 
 
-class AuthorizationServer:
-    # autho_table = {
-    #     'jane': {
-    #         'admin': True,
-    #         'resources': []
-    #     },
-    #     'john': {
-    #         'admin': False,
-    #         'resources': ['edit_feedback', 'delete_feedback']
-    #     },
-    #
-    # }
 
-    autho_table = {
-
-    }
-
-    @staticmethod
-    def add_or_update_user_autho(user, resources: list):
-        AuthorizationServer.autho_table['user.username']['admin'] = user.admin
-        AuthorizationServer.autho_table['user.username']['resources'] = resources

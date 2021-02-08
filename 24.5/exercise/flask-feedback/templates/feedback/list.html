@@ -17,6 +17,7 @@
 						<h5 class="card-title">{{ fb.title }}</h5>
 						<p class="card-text">{{ fb.content }}</p>
 						{#<a href="#" class="btn btn-primary">Go somewhere</a>#}
+						<form><button type="submit" formaction="/feedback/{{ fb.id }}/delete" formmethod="POST">Delete</button></form>
 					</div>
 				</div>
 			{% endfor %}
