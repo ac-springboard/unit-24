@@ -7,7 +7,7 @@ from werkzeug.exceptions import Unauthorized
 
 from decorators import authenticated, authorized
 from models import connect_db, db, User, Feedback
-from repository import reset_tables
+from repository import reset_tables, UserRepo
 from forms import RegisterForm, LoginForm, FeedbackForm, DeleteForm
 
 # CONFIG ENVIRONMENT
@@ -209,9 +209,11 @@ def list_feedbacks():
     logged_username = session['username']
     logged_user = User.query.filter_by(username=logged_username).first()
     feedbacks = Feedback.query.all()
+    authorizations = UserRepo.get_authorizations(logged_username)
     return render_template('/feedback/list.html',
                            logged_user=logged_user,
-                           feedbacks=feedbacks)
+                           feedbacks=feedbacks,
+                           authorizations=authorizations)
 
 
 @app.route("/contact-us")

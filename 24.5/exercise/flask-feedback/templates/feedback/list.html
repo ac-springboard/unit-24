@@ -16,27 +16,24 @@
 					<div class="card-body">
 						<h5 class="card-title">{{ fb.title }}</h5>
 						<p class="card-text">{{ fb.content }}</p>
-						{#<a href="#" class="btn btn-primary">Go somewhere</a>#}
 
 					</div>
 					<div class="card-footer bg-transparent p-0">
 						<form class="list-form">
-							<button type="submit" class="list-button bg-info float-left border"
-											formaction="/feedback/{{ fb.id }}/update"
-											formmethod="POST">Edit
-							</button>
-							<button type="submit" class="list-button bg-danger float-right border"
-											formaction="/feedback/{{ fb.id }}/delete"
-											formmethod="POST">Delete
-							</button>
-							{#<button type="submit" class="btn btn-sm btn-warning float-left"#}
-							{#				formaction="/feedback/{{ fb.id }}/update"#}
-							{#				formmethod="POST">Edit#}
-							{#</button>#}
-							{#<button type="submit" class="btn btn-sm btn-danger float-right"#}
-							{#				formaction="/feedback/{{ fb.id }}/delete"#}
-							{#				formmethod="POST">Delete#}
-							{#</button>#}
+							{% if authorizations == 'all' or 'update_feedback' in authorizations %}
+								<button type="submit"
+												class="list-button bg-info float-left border"
+												formaction="/feedback/{{ fb.id }}/update"
+												formmethod="POST">Edit
+								</button>
+							{% endif %}
+							{% if authorizations == 'all' or 'delete_feedback' in authorizations %}
+								<button type="submit"
+												class="list-button bg-danger float-right border"
+												formaction="/feedback/{{ fb.id }}/delete"
+												formmethod="POST">Delete
+								</button>
+							{% endif %}
 						</form>
 					</div>
 				</div>

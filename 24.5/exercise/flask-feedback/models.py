@@ -32,7 +32,7 @@ class User(db.Model):
     email = db.Column(db.String(50), nullable=False)
     first_name = db.Column(db.String(30), nullable=False)
     last_name = db.Column(db.String(30), nullable=False)
-    admin = db.Column(db.Boolean)
+    is_admin = db.Column(db.Boolean)
 
     feedback = db.relationship("Feedback",
                                backref="user",
