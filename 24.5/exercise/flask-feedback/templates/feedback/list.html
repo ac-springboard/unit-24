@@ -4,10 +4,10 @@
 
 {% block content %}
 
-	<div class="container-fluid">
+	<div class="container-fluid border">
 		<div class="row">
 			{% for fb in feedbacks %}
-				<div class="card item">
+				<div class="card list-item">
 					<a href="/users/{{ fb.user.username }}">
 						<h5 class="card-header bg-info text-white font-italic">
 							by {{ fb.user.first_name }} {{ fb.user.last_name }}
@@ -17,7 +17,27 @@
 						<h5 class="card-title">{{ fb.title }}</h5>
 						<p class="card-text">{{ fb.content }}</p>
 						{#<a href="#" class="btn btn-primary">Go somewhere</a>#}
-						<form><button type="submit" formaction="/feedback/{{ fb.id }}/delete" formmethod="POST">Delete</button></form>
+
+					</div>
+					<div class="card-footer bg-transparent p-0">
+						<form class="list-form">
+							<button type="submit" class="list-button bg-info float-left border"
+											formaction="/feedback/{{ fb.id }}/update"
+											formmethod="POST">Edit
+							</button>
+							<button type="submit" class="list-button bg-danger float-right border"
+											formaction="/feedback/{{ fb.id }}/delete"
+											formmethod="POST">Delete
+							</button>
+							{#<button type="submit" class="btn btn-sm btn-warning float-left"#}
+							{#				formaction="/feedback/{{ fb.id }}/update"#}
+							{#				formmethod="POST">Edit#}
+							{#</button>#}
+							{#<button type="submit" class="btn btn-sm btn-danger float-right"#}
+							{#				formaction="/feedback/{{ fb.id }}/delete"#}
+							{#				formmethod="POST">Delete#}
+							{#</button>#}
+						</form>
 					</div>
 				</div>
 			{% endfor %}

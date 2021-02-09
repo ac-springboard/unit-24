@@ -9,7 +9,7 @@
 			Flask Feedback &ndash; {% block title %}{% endblock %}
 		</title>
 		<link rel="stylesheet"
-					href="https://unpkg.com/bootstrap/dist/css/bootstrap.css">
+					href="/static/bootstrap.css">
 		<link rel="stylesheet" href="/static/style.css">
 	</head>
 	<body>
@@ -18,13 +18,13 @@
 			<a class="navbar-brand" href="/">Flask Feedback</a>
 			<div class="navbar-nav">
 				{% if 'username' in session %}
-					<a class="nav-link nav-item text-decoration-none"
+					<a class="nav-link nav-item float-right" href="/logout">Logout</a>
+					<a class="nav-link nav-item text-decoration-none float-right"
 						 href="/feedback">Feedbacks</a>
-					<a class="nav-link nav-item text-right" href="/logout">Logout</a>
-					<a class="nav-link nav-item text-right text-decoration-none"
+					<a class="nav-link nav-item float-right text-decoration-none"
 						 href="/users/{{ session['username'] }}">{{ session['username'] }}</a>
 				{% else %}
-					<a class="nav-link nav-item text-right"
+					<a class="nav-link nav-item float-right"
 						 href="/login">Login</a>
 				{% endif %}
 			</div>

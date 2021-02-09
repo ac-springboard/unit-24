@@ -1,5 +1,10 @@
-.nav {
-  border: 1px solid magenta;
+html, body, form {
+  width: 100%;
+  height: 100%;
+}
+
+.form, .card, .card-body, .card-footer, .row {
+  width: 100% !important;
 }
 
 .navbar-nav, .nav-link, .nav-item {
@@ -36,14 +41,34 @@
   min-width: 85% !important;
 }
 
-.item {
+.list-item {
   margin: 1em;
   flex-grow: 1;
   max-width: 30%;
 }
 
-.row {
-  justify-content: space-around;
+.list-button {
+  border: none;
+  width: 100% !important;
+  margin: 0 !important;
+  display: inline-block !important;
+}
+
+.list-form {
+  display: flex;
+  padding: 0 !important;
+}
+
+.list-form button:last-child {
+  border-radius: 0 0 calc(0.25rem - 1px) 0 !important;
+}
+
+.list-form button:first-child {
+  border-radius: 0 0 0 calc(0.25rem - 1px) !important;
+}
+
+.card-footer {
+  border-top: none !important;
 }
 
 /*# sourceMappingURL=style.css.map */

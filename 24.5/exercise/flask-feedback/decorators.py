@@ -68,8 +68,8 @@ def authorized(resource_key):
                 else:
                     return func(*args, **kwargs)
 
+        check_authorization.__name__ = func.__name__
         return check_authorization
-        authorized_decorator.__name__ = func.__name__
 
     return authorized_decorator
 

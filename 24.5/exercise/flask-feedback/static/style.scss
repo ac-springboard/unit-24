@@ -3,9 +3,21 @@ $bootstrap-info: #5bc0de;
 $bootstrap-dark: #343a40;
 $bootstrap-warning: #ffc107;
 $bootstrap-danger: #dc3545;
+$bootstrap-border: 1px solid rgba(0, 0, 0, 125);
+$bootstrap-card-border-radius: calc(0.25rem - 1px);
+
+
+html, body, form {
+  width: 100%;
+  height: 100%;
+}
+
+.form, .card, .card-body, .card-footer, .row {
+  width: 100% !important;
+}
 
 .nav {
-  border: 1px solid magenta;
+  //border: 1px solid magenta;
 }
 
 .navbar-nav, .nav-link, .nav-item {
@@ -18,14 +30,11 @@ $bootstrap-danger: #dc3545;
 }
 
 .navbar-nav {
-  //border: 1px solid red;
-
 }
 
 .nav-item {
   padding-left: 0.5em !important;
   padding-right: 0.5em !important;
-
 }
 
 .nav-link:active, nav-link:visited {
@@ -45,21 +54,48 @@ $bootstrap-danger: #dc3545;
 }
 
 .container {
-  //border: 1px solid magenta;
 }
 
 .container, .container-fluid {
   min-width: 85% !important;
 }
 
-.item {
+.card-footer {
+}
+
+.list-item {
   margin: 1em;
   flex-grow: 1;
   max-width: 30%;
 }
 
-.row {
-  justify-content: space-around;
+.list-button {
+  border: none;
+  width: 100% !important;
+  margin: 0 !important;
+  display: inline-block !important;
 }
 
+.list-button::after {
+}
+
+.row {
+}
+
+.list-form {
+  display: flex;
+  padding: 0 !important;
+}
+
+.list-form button:last-child {
+  border-radius: 0 0 $bootstrap-card-border-radius 0 !important;
+}
+
+.list-form button:first-child {
+  border-radius: 0 0 0 $bootstrap-card-border-radius !important;
+}
+
+.card-footer {
+  border-top: none !important;
+}
 

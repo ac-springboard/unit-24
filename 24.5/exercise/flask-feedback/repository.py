@@ -23,10 +23,16 @@ def reset_tables(db):
     jane_fb_01 = Feedback(title='jane_fb_01', content='jane_cfb_01', username='jane')
     jane_fb_02 = Feedback(title='jane_fb_02', content='jane_cfb_02', username='jane')
 
-    AS.add_or_update_user_autho(john, ['edit_feedback'])
+    AS.add_or_update_user_autho(john, ['update_feedback'])
     AS.add_or_update_user_autho(jane, [])
 
-    db.session.add_all([john, jane, john_fb_01, john_fb_02, jane_fb_01, jane_fb_02])
+    db.session.add_all([john, john_fb_01, john_fb_02, jane, jane_fb_01, jane_fb_02])
+    # db.session.add(jane)
+    # db.session.add(jane_fb_01)
+    # db.session.add(jane_fb_02)
+    # db.session.add(john)
+    # db.session.add(john_fb_01)
+    # db.session.add(john_fb_02)
     db.session.commit()
 
 

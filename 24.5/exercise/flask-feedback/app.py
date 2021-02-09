@@ -162,6 +162,7 @@ def new_feedback(username):
 
 @app.route("/feedback/<int:feedback_id>/update", methods=["GET", "POST"])
 @authenticated
+@authorized('update_feedback')
 def update_feedback(feedback_id):
     """Show update-feedback form and process it."""
 
