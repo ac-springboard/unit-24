@@ -2,12 +2,12 @@
 import os
 
 from flask import Flask, render_template, redirect, session
-# from flask_debugtoolbar import DebugToolbarExtension
+from flask_debugtoolbar import DebugToolbarExtension
 from werkzeug.exceptions import Unauthorized
 
 from decorators import authenticated, authorized
 from models import connect_db, db, User, Feedback
-from repository import reset_tables, UserRepo
+from repository import reset_tables_with_test_users, set_test_authorizations
 from forms import RegisterForm, LoginForm, FeedbackForm, DeleteForm
 
 # CONFIG ENVIRONMENT
@@ -30,7 +30,20 @@ app.config['SECRET_KEY'] = "shhhhh"
 # DATABASE
 
 connect_db(app)
+reset_tables_with_test_users(db)
+# set_test_authorizations()
 
+
+def logged_user(lu):
+    logu = lu
+
+    def get_logged_user():
+        nonlocal logu
+        return logu
+
+    return get_logged_user
+
+glu = None
 
 # ROUTES
 
@@ -63,6 +76,9 @@ def register():
         db.session.commit()
         session['username'] = user.username
 
+        global glu
+        glu = logged_user(user)
+
         return redirect(f"/users/{user.username}")
 
     else:
@@ -85,6 +101,8 @@ def login():
         user = User.authenticate(username, password)  # <User> or False
         if user:
             session['username'] = user.username
+            global glu
+            glu = logged_user(user)
             return redirect(f"/users/{user.username}")
         else:
             form.username.errors = ["Invalid username/password."]
@@ -99,6 +117,7 @@ def logout():
     """Logout route."""
 
     session.pop("username")
+    logged_user( None )
     return redirect("/login")
 
 
@@ -113,7 +132,7 @@ def show_user(username):
     user = User.query.get(username)
     form = DeleteForm()
 
-    return render_template("users/show.html", user=user, form=form)
+    return render_template("users/show.html", user=user, form=form, is_authorized=is_authorized)
 
 
 @app.route("/users/<username>/delete", methods=["POST"])
@@ -206,19 +225,23 @@ def delete_feedback(feedback_id):
 @app.route("/feedback")
 @authenticated
 def list_feedbacks():
-    logged_username = session['username']
-    logged_user = User.query.filter_by(username=logged_username).first()
+    # logged_username = session['username']
+    # logged_user = User.query.filter_by(username=logged_username).first()
     feedbacks = Feedback.query.all()
-    authorizations = UserRepo.get_authorizations(logged_username)
     return render_template('/feedback/list.html',
-                           logged_user=logged_user,
+                           logged_user=glu(),
                            feedbacks=feedbacks,
-                           authorizations=authorizations)
+                           is_authorized=is_authorized)
 
 
 @app.route("/contact-us")
 def contact_us():
     return render_template('admin/contact_us.html')
+
+
+def is_authorized(ref_user_username, resource_key):
+    global glu
+    return glu().is_admin or glu().username == ref_user_username or resource_key in glu().get_authorizations()
 
 
 # @app.errorhandler(302)
@@ -232,5 +255,4 @@ def contact_us():
 
 
 if __name__ == '__main__':
-    reset_tables(db)
-    app.run()
+    app.run(host='0.0.0.0', port=5000)

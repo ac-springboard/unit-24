@@ -2,6 +2,7 @@
 
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
+from authorization_server import AuthorizationServer as AS
 
 bcrypt = Bcrypt()
 db = SQLAlchemy()
@@ -39,6 +40,9 @@ class User(db.Model):
                                cascade="all,delete")
 
     # start of convenience class methods
+
+    def get_authorizations(self):
+        return AS.get_user_authorizations(self.username)
 
     @classmethod
     def register(cls, username, password, first_name, last_name, email):

@@ -20,6 +20,7 @@ class AuthorizationServer:
 
     }
 
+    # TODO: IMPLEMENT THE OBSERVER PATTERN TO UPDATE THE USER'S AUTHORIZATIONS
     @staticmethod
     def add_or_update_user_autho(user, resources: list):
         user_autho = {
@@ -27,7 +28,7 @@ class AuthorizationServer:
             'resources': resources
         }
         AuthorizationServer.autho_table[user.username] = user_autho
-        print('=====>>>>> autho_table:', AuthorizationServer.autho_table)
+        return resources
 
     @staticmethod
     def get_user_authorizations(username):

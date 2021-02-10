@@ -7,9 +7,9 @@
 	<div class="container-fluid border">
 		<div class="row">
 			{% for fb in feedbacks %}
-				<div class="card list-item">
+				<div class="card list-item shadow">
 					<a href="/users/{{ fb.user.username }}">
-						<h5 class="card-header bg-info text-white font-italic">
+						<h5 class="card-header bg-primary text-white font-italic">
 							by {{ fb.user.first_name }} {{ fb.user.last_name }}
 						</h5>
 					</a>
@@ -20,14 +20,15 @@
 					</div>
 					<div class="card-footer bg-transparent p-0">
 						<form class="list-form">
-							{% if authorizations == 'all' or 'update_feedback' in authorizations %}
+							{#							{% if session['username'] == fb.user.username or authorizations == 'all' or 'update_feedback' in authorizations %}#}
+							{% if is_authorized(fb.user.username, 'update_feedback') %}
 								<button type="submit"
 												class="list-button bg-info float-left border"
 												formaction="/feedback/{{ fb.id }}/update"
 												formmethod="POST">Edit
 								</button>
 							{% endif %}
-							{% if authorizations == 'all' or 'delete_feedback' in authorizations %}
+							{% if is_authorized(fb.user.username, 'delete_feedback') %}
 								<button type="submit"
 												class="list-button bg-danger float-right border"
 												formaction="/feedback/{{ fb.id }}/delete"
